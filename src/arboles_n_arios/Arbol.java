@@ -323,15 +323,17 @@ public class Arbol {
         while (q != null) {
             if (q.getSw() == 0) {
                 if (nivel < 1) {
-                    return "Los niveles son a partir de 1";
+                    respuesta = "Los niveles son a partir de 1";
                 } else if (nivel == 1) {
                     respuesta = respuesta + " " + raiz.getDato();
                 } else {
-
+                    respuesta = respuesta + " " + q.getDato();
+                    mostrarDatoNivel(q.getLiga(), respuesta, nivel - 1);
                 }
 
             }
         }
+        JOptionPane.showMessageDialog(null, respuesta);
 
         return respuesta;
 
