@@ -4,112 +4,101 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author valen
+ * @author Valentina Restrepo Arboleda
  */
 public class Arbol {
 
-    Nodo raiz = null;
+    Nodo raiz;
 
-    public Nodo getRaiz() {
-        return raiz;
+    public Arbol() {
+        raiz = null;
     }
 
     public void setRaiz(Nodo raiz) {
         this.raiz = raiz;
     }
 
-    //Muestra el árbol
-    public int mostrarArbol(Nodo r, int dato) {
-        Nodo p = r;
-        while (p != null) {
-            if (p.getSw() == 0) {
-                dato = p.getDato();
-                if (r == p) {
-                    dato = dato;
+    public Nodo getRaiz() {
+        return raiz;
+    }
+
+    //Mostrar árbol
+    public String Mostrar(Nodo p, String arbol) {
+        Nodo q = p;
+        while (q != null) {
+            if (q.getSw() == 0) {
+                arbol = arbol + q.getDato() + " ";
+                if (p == q) {
+                    arbol = arbol + "( ";
                 }
             } else {
-                dato = mostrarArbol(p.getLigalista(), dato);
+                arbol = Mostrar(q.getLigalista(), arbol);
             }
-            p = p.getLiga();
-            if (p == null) {
-                dato = dato;
+            q = q.getLiga();
+            if (q == null) {
+                arbol = arbol + ") ";
             }
         }
-        return dato;
+        return arbol;
     }
 
-    //Muestra un nodo dado
-    public void mostrarNodo(Nodo r) {
-        Nodo p = r;
-        while (p != null) {
-            if (p.getSw() == 0) {
-                JOptionPane.showMessageDialog(null, "El elemento " + " se encontró");
-            } else {
-                mostrarNodo(p.getLigalista());
-            }
-            p = p.getLiga();
-        }
-    }
-
-    //Ingresa un dato dado
-    public void insertar(Nodo nodopadre, Nodo dato, int datopadre) {
+    //Insertar
+    public void insertar(Nodo NodoPadre, Nodo r, int datopadre) {
         if (this.getRaiz() != null) {
-            Nodo q = nodopadre;
-            Nodo test = nodopadre;
+            Nodo q = NodoPadre;
+            Nodo test = NodoPadre;
             while (q != null) {
                 if (q.getLiga() == null && test.getDato() == datopadre) {
-                    q.setLiga(dato);
+                    q.setLiga(r);
                     q = q.getLiga();
-                    JOptionPane.showMessageDialog(null, "Dato ingresado");
+                    JOptionPane.showMessageDialog(null, "Dato insertado correctamente");
                 }
                 if (q.getSw() == 0) {
                     if (q.getDato() == datopadre && test != q) {
                         q.setSw(1);
                         Nodo newFather = new Nodo(datopadre);
                         q.setLigalista(newFather);
-                        newFather.setLiga(dato);
-                        JOptionPane.showMessageDialog(null, "Dato ingresado");
+                        newFather.setLiga(r);
+                        JOptionPane.showMessageDialog(null, "Dato insertado correctamente");
                     }
                 } else {
-                    insertar(q.getLigalista(), dato, datopadre);
+                    insertar(q.getLigalista(), r, datopadre);
                 }
                 q = q.getLiga();
             }
         } else {
-            this.setRaiz(dato);
-            JOptionPane.showMessageDialog(null, "Dato ingresado");
+            this.setRaiz(r);
+            JOptionPane.showMessageDialog(null, "Dato ingresado correctamente");
         }
     }
 
-    //Borra un dato en el árbol
+    //Eliminar
     public void eliminar(Nodo r, int dato) {
-        Nodo p = r;
-        Nodo ant = p;
-        if (p.getDato() == dato && p.getLiga() != null) { // dato en un padre
-            int newFather = hijoMayor(p); //Busca el hijo mayor
-            eliminar(p, newFather);//eliminar el hijo mayor
-            p.setDato(newFather);
+        Nodo q = r;
+        Nodo ant = q;
+        if (q.getDato() == dato && q.getLiga() != null) { // dato en un padre
+            int datoNuevopadre = hijoMayor(q); //Busca el hijo mayor
+            eliminar(q, datoNuevopadre);//eliminar el hijo mayor
+            q.setDato(datoNuevopadre);
         }
-
-        if (p.getLiga() != null) {
-            p = p.getLiga();
+        if (q.getLiga() != null) {
+            q = q.getLiga();
         }
-
-        while (p != null) {
-            if (p.getSw() == 0) {
-                if (p.getDato() == dato) { //dato es una hoja
-                    ant.setLiga(p.getLiga());
+        while (q != null) {
+            if (q.getSw() == 0) {
+                if (q.getDato() == dato) { //dato es una hoja
+                    ant.setLiga(q.getLiga());
                 }
             } else {
-                eliminar(p.getLigalista(), dato);
-                if (p.getLigalista().getLiga() == null) {
-                    p.setDato(p.getLigalista().getDato());
-                    p.setSw(0);
-                    p.setLigalista(null);
+                eliminar(q.getLigalista(), dato);
+                if (q.getLigalista().getLiga() == null) {
+                    q.setDato(q.getLigalista().getDato());
+                    q.setSw(0);
+                    q.setLigalista(null);
                 }
             }
-            ant = p;
-            p = p.getLiga();
+            ant = q;
+            q = q.getLiga();
         }
     }
 
@@ -132,51 +121,55 @@ public class Arbol {
         return mayor;
     }
 
-    public boolean buscarDato(Nodo r, int dato, boolean resp) {
+    //Buscar dato
+    public boolean buscarDato(Nodo r, int dato, boolean respuesta) {
         Nodo q = r;
         while (q != null) {
             if (q.getSw() == 0) {
                 if (q.getDato() == dato) {
-                    resp = true;
+                    respuesta = true;
                 }
             } else {
-                resp = buscarDato(q.getLigalista(), dato, resp);
+                respuesta = buscarDato(q.getLigalista(), dato, respuesta);
             }
             q = q.getLiga();
         }
-        return resp;
+        return respuesta;
     }
 
-    public String mostrarRaiz(Nodo r, String raizs) {
+    //Mostrar raices
+    public String mostrarRaices(Nodo r, String raices) {
         Nodo q = r;
         while (q != null) {
             if (q.getSw() == 0) {
                 if (r == q) {
-                    raizs = raizs + q.getDato() + " ";
+                    raices = raices + q.getDato() + " ";
                 }
             } else {
-                raizs = mostrarRaiz(q.getLigalista(), raizs);
+                raices = mostrarRaices(q.getLigalista(), raices);
             }
             q = q.getLiga();
         }
-        return raizs;
+        return raices;
     }
 
-    public int contarHojas(Nodo r, int hoja) {
+    //Contar hojas
+    public int contarHojas(Nodo r, int hojas) {
         Nodo q = r;
         while (q != null) {
             if (q.getSw() == 0) {
                 if (r != q) {
-                    hoja = hoja + 1;
+                    hojas = hojas + 1;
                 }
             } else {
-                hoja = contarHojas(q.getLigalista(), hoja);
+                hojas = contarHojas(q.getLigalista(), hojas);
             }
             q = q.getLiga();
         }
-        return hoja;
+        return hojas;
     }
 
+    // Mostrar hojas
     public String mostrarHojas(Nodo r, String hojas) {
         Nodo q = r;
         while (q != null) {
@@ -192,7 +185,8 @@ public class Arbol {
         return hojas;
     }
 
-    public int mostrarGradoArbol(Nodo r, int grado) {
+    //Mostrar grado del arbol
+    public int gradoArbol(Nodo r, int grado) {
         Nodo q = r;
         int aux = 0;
         q = q.getLiga();
@@ -206,14 +200,15 @@ public class Arbol {
         q = r;
         while (q != null) {
             if (q.getSw() != 0) {
-                grado = mostrarGradoArbol(q.getLigalista(), grado);
+                grado = gradoArbol(q.getLigalista(), grado);
             }
             q = q.getLiga();
         }
         return grado;
     }
 
-    public int mostrarGradoDato(Nodo r, int dato, int grado) {
+    //Mostrar grado de un dato
+    public int gradoDato(Nodo r, int dato, int grado) {
         Nodo q = r;
         while (q != null) {
             if (q.getSw() == 0) {
@@ -226,14 +221,15 @@ public class Arbol {
                     q = r;
                 }
             } else {
-                grado = mostrarGradoDato(q.getLigalista(), dato, grado);
+                grado = gradoDato(q.getLigalista(), dato, grado);
             }
             q = q.getLiga();
         }
         return grado;
     }
 
-    public String hijosDato(Nodo r, int dato, String resp) {
+    //Mostrar hijos
+    public String mostrarHijos(Nodo r, int dato, String respuesta) {
         Nodo q = r;
         while (q != null) {
             if (q.getSw() == 0) {
@@ -241,22 +237,30 @@ public class Arbol {
                     q = q.getLiga();
                     while (q != null) {
                         if (q.getSw() == 0) {
-                            resp = resp + " " + q.getDato();
+                            respuesta = respuesta + " " + q.getDato();
                         } else {
-                            resp = resp + " " + q.getLigalista().getDato();
+                            respuesta = respuesta + " " + q.getLigalista().getDato();
                         }
                         q = q.getLiga();
                     }
                     q = r;
                 }
             } else {
-                resp = hijosDato(q.getLigalista(), dato, resp);
+                respuesta = mostrarHijos(q.getLigalista(), dato, respuesta);
             }
             q = q.getLiga();
         }
-        return resp;
+        return respuesta;
     }
 
+    //Mostrar hermanos
+    public String mostrarHermanos(Nodo r, int dato, String respuesta) {
+
+        return null;
+
+    }
+
+    //Mostrar nivel
     public int mostrarNivel(Nodo r, int dato, int altura, int nivel) {
         Nodo q = r;
         while (q != null) {
@@ -276,6 +280,7 @@ public class Arbol {
         return nivel;
     }
 
+    //Mostrar altura
     public int mostrarAltura(Nodo r, int altura, int nivel) {
         Nodo q = r;
         while (q != null) {
@@ -287,15 +292,14 @@ public class Arbol {
                     altura = nivel;
                 }
             } else {
-                System.out.print(nivel);
-                nivel = mostrarAltura(q.getLigalista(), altura, nivel);
-                System.out.println(nivel);
+                altura = mostrarAltura(q.getLigalista(), altura, nivel);
             }
             q = q.getLiga();
         }
         return altura;
     }
 
+    //Mostrar dato padre
     public void mostrarDatoPadre(Nodo r, int dato) {
         Nodo q = r;
         while (q != null) {
@@ -313,8 +317,35 @@ public class Arbol {
         }
     }
 
-    public void Limpiar() {
-        this.setRaiz(null);
-    }
+    //Mostrar nivel
+    public String mostrarDatoNivel(Nodo r, String respuesta, int nivel) {
+        Nodo q = r;
+        while (q != null) {
+            if (q.getSw() == 0) {
+                if (nivel < 1) {
+                    return "Los niveles son a partir de 1";
+                } else if (nivel == 1) {
+                    respuesta = respuesta + " " + raiz.getDato();
+                } else {
 
+                }
+
+            }
+        }
+
+        return respuesta;
+
+    }
+//    public void showNodo(Nodo p) {
+//        Nodo q = p;
+//        boolean found = false;
+//        while (q != null) {
+//            if (q.getSw() == 0) {
+//                JOptionPane.showMessageDialog(null, "El elemento " + " se encontró");
+//            } else {
+//                showNodo(q.getLigalista());
+//            }
+//            q = q.getLiga();
+//        }
+//    }
 }

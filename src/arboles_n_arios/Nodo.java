@@ -1,15 +1,19 @@
 package arboles_n_arios;
 
+/**
+ *
+ * @author Valentina Restrepo Arboleda
+ */
 public class Nodo {
-        
+
     int dato, sw;
     Nodo liga, ligalista;
 
     public Nodo(int dato) {
         this.dato = dato;
-        sw=0;
-        liga=null;
-        ligalista=null;
+        sw = 0;
+        liga = null;
+        ligalista = null;
     }
 
     public int getDato() {
@@ -43,7 +47,5 @@ public class Nodo {
     public void setLigalista(Nodo ligaista) {
         this.ligalista = ligaista;
     }
-   
-}
 
-  
+}
